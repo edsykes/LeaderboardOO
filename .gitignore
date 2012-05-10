@@ -1,0 +1,5 @@
+
+*.suo
+/Leaderboard/bin
+/Leaderboard/obj
+/_ReSharper.Leaderboard
