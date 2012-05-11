@@ -47,8 +47,8 @@ namespace LeaderboardApp
     // What's the score of the design of this class?
     internal class Player
     {
-        public int Score;
-        public string Name;
+        public int Score { get; set; }
+        public string Name { get; set; }
     }
 
     // We'll use these later
