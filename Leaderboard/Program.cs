@@ -11,31 +11,31 @@ namespace LeaderboardApp
         {
             Player ed = new Player(100, "Ed");
             Player cosmin = new Player(58, "Cosmin");
-            
+
             var leaderboard = new Leaderboard();
-            leaderboard.AddScore(ed.Name, ed.Score);
-            leaderboard.AddScore(cosmin.Name, cosmin.Score);
+            leaderboard.AddScore(ed.ScorePosting);
+            leaderboard.AddScore(cosmin.ScorePosting);
             leaderboard.Scores.Sort(Sorter);
-            
+
             foreach (var each in leaderboard.Scores)
             {
-                Console.WriteLine(string.Format("{0} scored {1}", each.Key, each.Value)); 
+                Console.WriteLine(each.ToString());
             }
         }
 
-        static int Sorter(KeyValuePair<string, int> first, KeyValuePair<string, int> second )
+        static int Sorter(ScorePosting first, ScorePosting second)
         {
-            return second.Value.CompareTo(first.Value);
+            return second.Score.CompareTo(first.Score);
         }
     }
 
     internal class Leaderboard
     {
-        public List<KeyValuePair<string, int>> Scores = new List<KeyValuePair<string, int>>();
+        public List<ScorePosting> Scores = new List<ScorePosting>();
 
-        public void AddScore(string name, int score)
+        public void AddScore(ScorePosting scorePosting)
         {
-            Scores.Add(new KeyValuePair<string, int>(name, score));
+            Scores.Add(scorePosting);
         }
     }
 
@@ -48,8 +48,34 @@ namespace LeaderboardApp
             Name = name;
         }
 
+        private int Score { get; set; }
+        private string Name { get; set; }
+
+        public ScorePosting ScorePosting
+        {
+            get
+            {
+                return new ScorePosting(Name, Score);
+            }
+        }
+    }
+
+    internal class ScorePosting
+    {
+        private readonly string _name;
+        private readonly int _score;
         public int Score { get; private set; }
-        public string Name { get; private set; }
+
+        public ScorePosting(string name, int score)
+        {
+            _name = name;
+            _score = score;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} scored {1}", _name, _score);
+        }
     }
 
     // We'll use these later
