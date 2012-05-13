@@ -9,13 +9,8 @@ namespace LeaderboardApp
     {
         static void Main(string[] args)
         {
-            Player ed = new Player();
-            ed.Score = 100;
-            ed.Name = "Ed";
-
-            Player cosmin = new Player();
-            cosmin.Score = 58;
-            cosmin.Name = "Cosmin";
+            Player ed = new Player(100, "Ed");
+            Player cosmin = new Player(58, "Cosmin");
             
             var leaderboard = new Leaderboard();
             leaderboard.AddScore(ed.Name, ed.Score);
@@ -47,8 +42,14 @@ namespace LeaderboardApp
     // What's the score of the design of this class?
     internal class Player
     {
-        public int Score { get; set; }
-        public string Name { get; set; }
+        public Player(int score, string name)
+        {
+            Score = score;
+            Name = name;
+        }
+
+        public int Score { get; private set; }
+        public string Name { get; private set; }
     }
 
     // We'll use these later
