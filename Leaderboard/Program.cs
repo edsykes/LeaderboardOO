@@ -15,27 +15,33 @@ namespace LeaderboardApp
             var leaderboard = new Leaderboard();
             ed.PostScore(leaderboard);
             cosmin.PostScore(leaderboard);
-            leaderboard.Scores.Sort(Sorter);
-
-            foreach (var each in leaderboard.Scores)
-            {
-                Console.WriteLine(each.ToString());
-            }
-        }
-
-        static int Sorter(ScorePosting first, ScorePosting second)
-        {
-            return second.Score.CompareTo(first.Score);
+            leaderboard.Publish();
         }
     }
 
     internal class Leaderboard
     {
-        public List<ScorePosting> Scores = new List<ScorePosting>();
+        private List<ScorePosting> Scores = new List<ScorePosting>();
 
         public void AddScore(ScorePosting scorePosting)
         {
             Scores.Add(scorePosting);
+        }
+
+        public void Publish()
+        {
+            Scores.Sort(Sorter);
+
+            foreach (var each in Scores)
+            {
+                Console.WriteLine(each.ToString());
+            }
+
+        }
+
+        private static int Sorter(ScorePosting first, ScorePosting second)
+        {
+            return second.CompareTo(first);
         }
     }
 
@@ -65,11 +71,10 @@ namespace LeaderboardApp
         }
     }
 
-    internal class ScorePosting
+    internal class ScorePosting : IComparable<ScorePosting>
     {
         private readonly string _name;
         private readonly int _score;
-        public int Score { get; private set; }
 
         public ScorePosting(string name, int score)
         {
@@ -77,10 +82,16 @@ namespace LeaderboardApp
             _score = score;
         }
 
+        public int CompareTo(ScorePosting other)
+        {
+            return _score.CompareTo(other._score);
+        }
+
         public override string ToString()
         {
             return string.Format("{0} scored {1}", _name, _score);
         }
+
     }
 
     // We'll use these later
