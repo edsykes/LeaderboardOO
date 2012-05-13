@@ -16,10 +16,15 @@ namespace LeaderboardApp
             ed.PostScore(leaderboard);
             cosmin.PostScore(leaderboard);
             leaderboard.Publish();
+
+            var loserboard = new Loserboard();
+            ed.PostScore(loserboard);
+            cosmin.PostScore(loserboard);
+            loserboard.Publish();
         }
     }
 
-    internal class Leaderboard
+    internal class Leaderboard : IBoard
     {
         private List<Player> Scores = new List<Player>();
 
@@ -30,6 +35,7 @@ namespace LeaderboardApp
 
         public void Publish()
         {
+            Console.WriteLine("The leaderboard is:");
             Scores.Sort(Sorter);
 
             foreach (var each in Scores)
@@ -45,19 +51,52 @@ namespace LeaderboardApp
         }
     }
 
+    internal class Loserboard : IBoard
+    {
+        private List<Player> Scores = new List<Player>();
+
+        public void AddScore(Player scorePosting)
+        {
+            Scores.Add(scorePosting);
+        }
+
+        public void Publish()
+        {
+            Console.WriteLine("The loserboard is: ");
+            Scores.Sort(Sorter);
+
+            foreach (var each in Scores)
+            {
+                Console.WriteLine(each.ToString());
+            }
+
+        }
+
+        private static int Sorter(Player first, Player second)
+        {
+            return first.CompareTo(second);
+        }
+    }
+
+
+    internal interface IBoard
+    {
+        void AddScore(Player player);
+    }
+
     // What's the score of the design of this class?
     internal class Player : IComparable<Player>
     {
         public Player(int score, string name)
         {
-            Score = score;
-            Name = name;
+            Score = new Score(score);
+            Name = new Name(name);
         }
 
-        private int Score { get; set; }
-        private string Name { get; set; }
+        private Score Score { get; set; }
+        private Name Name { get; set; }
 
-        public void PostScore(Leaderboard leaderboard)
+        public void PostScore(IBoard leaderboard)
         {
             leaderboard.AddScore(this);
         }
@@ -82,14 +121,29 @@ namespace LeaderboardApp
         {
             _name = name;
         }
+
+        public override string ToString()
+        {
+            return _name;
+        }
     }
 
-    class Score
+    class Score : IComparable<Score>
     {
         private int _value;
         public Score(int value)
         {
             _value = value;
+        }
+
+        public int CompareTo(Score score)
+        {
+            return Convert.ToInt32(_value).CompareTo(Convert.ToInt32(score._value));
+        }
+
+        public override string ToString()
+        {
+            return _value.ToString();
         }
     }
 }
