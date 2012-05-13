@@ -21,9 +21,9 @@ namespace LeaderboardApp
 
     internal class Leaderboard
     {
-        private List<ScorePosting> Scores = new List<ScorePosting>();
+        private List<Player> Scores = new List<Player>();
 
-        public void AddScore(ScorePosting scorePosting)
+        public void AddScore(Player scorePosting)
         {
             Scores.Add(scorePosting);
         }
@@ -39,14 +39,14 @@ namespace LeaderboardApp
 
         }
 
-        private static int Sorter(ScorePosting first, ScorePosting second)
+        private static int Sorter(Player first, Player second)
         {
             return second.CompareTo(first);
         }
     }
 
     // What's the score of the design of this class?
-    internal class Player
+    internal class Player : IComparable<Player>
     {
         public Player(int score, string name)
         {
@@ -57,42 +57,22 @@ namespace LeaderboardApp
         private int Score { get; set; }
         private string Name { get; set; }
 
-        private ScorePosting ScorePosting
-        {
-            get
-            {
-                return new ScorePosting(Name, Score);
-            }
-        }
-
         public void PostScore(Leaderboard leaderboard)
         {
-            leaderboard.AddScore(ScorePosting);
-        }
-    }
-
-    internal class ScorePosting : IComparable<ScorePosting>
-    {
-        private readonly string _name;
-        private readonly int _score;
-
-        public ScorePosting(string name, int score)
-        {
-            _name = name;
-            _score = score;
+            leaderboard.AddScore(this);
         }
 
-        public int CompareTo(ScorePosting other)
+        public int CompareTo(Player other)
         {
-            return _score.CompareTo(other._score);
+            return Score.CompareTo(other.Score);
         }
 
         public override string ToString()
         {
-            return string.Format("{0} scored {1}", _name, _score);
+            return string.Format("{0} scored {1}", Name, Score);
         }
-
     }
+
 
     // We'll use these later
     class Name
