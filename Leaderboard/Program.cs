@@ -13,8 +13,8 @@ namespace LeaderboardApp
             Player cosmin = new Player(58, "Cosmin");
 
             var leaderboard = new Leaderboard();
-            leaderboard.AddScore(ed.ScorePosting);
-            leaderboard.AddScore(cosmin.ScorePosting);
+            ed.PostScore(leaderboard);
+            cosmin.PostScore(leaderboard);
             leaderboard.Scores.Sort(Sorter);
 
             foreach (var each in leaderboard.Scores)
@@ -51,12 +51,17 @@ namespace LeaderboardApp
         private int Score { get; set; }
         private string Name { get; set; }
 
-        public ScorePosting ScorePosting
+        private ScorePosting ScorePosting
         {
             get
             {
                 return new ScorePosting(Name, Score);
             }
+        }
+
+        public void PostScore(Leaderboard leaderboard)
+        {
+            leaderboard.AddScore(ScorePosting);
         }
     }
 
